@@ -56,7 +56,7 @@
     <div>
     <input type="button" value="Crear Productos" class="menusA" id="irAcrearProducto" data-menu="crearProducto">
     <input type="button" value="Administrar Productos" class="menusA" id="irAgestionarProducto" data-menu="administrarProductos">
-    <input type="button" value="Administrar Compras" class="menusA" data-menu="ingreso">
+    <input type="button" value="Administrar Compras" class="menusA" id="irAlistaAprobacionCompras" data-menu="listaAprobacionCompras">
     <input type="button" value="Informe de Ganancias" class="menusA" data-menu="ingreso">
    </div>
 </div>
@@ -185,10 +185,10 @@
             <div class="filtro">
                 <h2>Mi lista de compras</h2>
                 <select name="" id="estado">
-                    <option value="Estados">Estados</option>
-                    <option value="Aprobadas">Aprobadas</option>
-                     <option value="Pendientes">Pendientes</option>
-                     <option value="Canceladas">Canceladas</option>
+                    <option value="TodasLasCompras">Todas las compras</option>
+                    <option value="Aprobada">Aprobadas</option>
+                     <option value="Pendiente">Pendientes</option>
+                     <option value="Cancelada">Canceladas</option>
                     </select>
                 <a id="volverMenuCliente1" data-menu="menuCliente">Volver al Menu</a>
             </div>
@@ -211,7 +211,66 @@
                <p id="saldoDisponible"></p>
         </div>
        </section>  
- <!---LISTA DE MIS COMPRAS APROBADAS-->
+ <!---LISTA DE APROBACION DE COMPRAS-->
+ <section class="ventana" id="listaAprobacionCompras">
+    <div class="centrado">
+            <h2>Listas de Aprobacion</h2>
+            <div class="titulos">
+                <h3>Lista Aprobadas</h3>
+                <h3>Lista Pendientes</h3>
+                <h3>Lista Canceladas</h3>
+            </div>
+            <div class="tablas">
+        <table>        <!--PRIMER LISTA-->
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Saldo Disponible</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Monto Total</th> 
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="listaAprobadas">
+
+            </tbody>
+        </table>
+           
+           <table >      <!--SEGUNDA LISTA-->
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Saldo Disponible</th>
+                    <th>Producto</th>
+                    <th>Activo</th>
+                    <th>Cantidad</th>
+                    <th>Monto Total</th> 
+                    <th>Estado</th>
+                    <th>Aprobar/Cancelar</th>
+                </tr>
+            </thead>
+            <tbody id="listaPendientes">
+            </tbody>
+           </table>
+           <table>                  <!--TERCER LISTA-->
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Saldo Disponible</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Monto Total</th> 
+                    <th>Estado</th>
+                   
+                </tr>
+            </thead>
+            <tbody id="listaCanceladas">
+            </tbody>
+           </table>
+    </div>
+</div>
+   </section>
        
     
     

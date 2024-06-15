@@ -2,6 +2,7 @@
 document.querySelector("#btnIngreso").addEventListener("click", login);
 document.querySelector("#btnRegistro").addEventListener("click", registro);
 document.querySelector("#btnCrearProducto").addEventListener("click", crearProducto);
+document.querySelector("#estado").addEventListener("change", cargarTablaMisCompras);
 
 /*-------------CAMBIAR PANTALLAS------------------*/
 document.querySelector("#btnIrRegistro").addEventListener("click", moverMenu);
@@ -20,6 +21,7 @@ document.querySelector("#irAmisComprasMenu").addEventListener("click", refrescar
 document.querySelector("#irAlistaProdMenu").addEventListener("click", refrescarListaProductos);
 document.querySelector("#irOfertasMenu").addEventListener("click", cargarTablaOfertas);
 document.querySelector("#irOfertas1").addEventListener("click", cargarTablaOfertas);
+document.querySelector("#irAlistaAprobacionCompras").addEventListener("click", refrescarListaAprobacionCompras);
 
 
 /*-----------------Funcion LOGIN---------------*/
@@ -27,7 +29,6 @@ let miSistema = new Sistema();
 miSistema.precargarDatos();
 
 let usuarioLogueado;
-
 function login(){
     let user = document.querySelector("#loginUser").value;
     let password = document.querySelector("#loginPassword").value;
@@ -45,10 +46,9 @@ function login(){
             usuarioLogueado = busquedaUsuario;
             let nombre = `Bienvenido ${usuarioLogueado.user.toUpperCase()}`;
             msj.innerHTML = nombre;  
+            cambiarPantalla("#menuCliente");
             let saldo = `Saldo: ${usuarioLogueado.saldo}`;
             sal.innerHTML = saldo;
-            cambiarPantalla("#menuCliente");
-           
         }
     }else{
         parrafo.innerHTML = "Usuario o password es incorrecta";
@@ -74,6 +74,11 @@ function refrescarListaMisCompras(){
 function refrescarListaAdministrar(){
     cargaAdministrarProductos();
     cambiarPantalla("#administrarProductos")
+}
+
+function refrescarListaAprobacionCompras(){
+    cargarTablaAprobacion();
+    cambiarPantalla("#listaAprobacionCompras");
 }
 
 /*-------------FUNCION LOG OUT-----------*/
@@ -393,6 +398,7 @@ function cargarTablaOfertas(){
                 unTR.appendChild(tdOferta);
                 unTR.appendChild(tdComprar);
                 tabla.appendChild(unTR);
+            
             }
             
         }
@@ -406,47 +412,53 @@ function cargarTablaOfertas(){
     }  
 }
 
+
 /*----------CARGAR TABLA MIS COMPRAS------------*/
 function cargarTablaMisCompras(){
-let filtro =  document.querySelector("#estado").value;
-let tabla = document.querySelector("#tableMisCompras");
-tabla.innerHTML = "";
-for(i=0;i<usuarioLogueado.misCompras.length;i++){
-let unaCompra = usuarioLogueado.misCompras[i];
-let unTR = document.createElement("tr");
-let tdNombreC = document.createElement("td");
-let tdCantidad = document.createElement("td");
-let tdMonto = document.createElement("td");
-let tdEstado = document.createElement("td");
-let tdCancelar = document.createElement("td");
-tdNombreC.innerHTML = unaCompra.producto.nombre;
-tdCantidad.innerHTML = unaCompra.cantidad;
-tdMonto.innerHTML = unaCompra.precioCompra;
-tdEstado.innerHTML= unaCompra.estado;
-let cancelarCompra =  document.createElement("input");
-cancelarCompra.setAttribute("type","button");
-cancelarCompra.setAttribute("value","Cancelar Compra");
-cancelarCompra.setAttribute("data-id",unaCompra.id); 
-cancelarCompra.setAttribute("class","botonesCan");  
-if(unaCompra.estado != "Pendiente"){
-    cancelarCompra.setAttribute("disabled","true");
+    let filtro =  document.querySelector("#estado").value;
+    let tabla = document.querySelector("#tableMisCompras");
+    tabla.innerHTML = "";
+    for(i=0;i<usuarioLogueado.misCompras.length;i++){
+    let unaCompra = usuarioLogueado.misCompras[i];
+    let unTR = document.createElement("tr");
+    let tdNombreC = document.createElement("td");
+    let tdCantidad = document.createElement("td");
+    let tdMonto = document.createElement("td");
+    let tdEstado = document.createElement("td");
+    let tdCancelar = document.createElement("td");
+    tdNombreC.innerHTML = unaCompra.producto.nombre;
+    tdCantidad.innerHTML = unaCompra.cantidad;
+    tdMonto.innerHTML = unaCompra.precioCompra;
+    tdEstado.innerHTML= unaCompra.estado;
+    let cancelarCompra =  document.createElement("input");
+    cancelarCompra.setAttribute("type","button");
+    cancelarCompra.setAttribute("value","Cancelar Compra");
+    cancelarCompra.setAttribute("data-id",unaCompra.id); 
+    cancelarCompra.setAttribute("class","botonesCan");  
+    if(unaCompra.estado != "Pendiente"){
+        cancelarCompra.setAttribute("disabled","true");
+    }
+
+if(unaCompra.estado == filtro || filtro === "TodasLasCompras"){
+    tdCancelar.appendChild(cancelarCompra);
+    unTR.appendChild(tdNombreC);
+    unTR.appendChild(tdCantidad);
+    unTR.appendChild(tdMonto);
+    unTR.appendChild(tdEstado);
+    unTR.appendChild(tdCancelar);
+    tabla.appendChild(unTR);
 }
-tdCancelar.appendChild(cancelarCompra);
-unTR.appendChild(tdNombreC);
-unTR.appendChild(tdCantidad);
-unTR.appendChild(tdMonto);
-unTR.appendChild(tdEstado);
-unTR.appendChild(tdCancelar);
-tabla.appendChild(unTR);
 }
-let misBotones = document.querySelectorAll(".botonesCan");
-for(let i = 0; i<misBotones.length; i++){
-    let unBoton = misBotones[i];
-    unBoton.addEventListener("click",cancelarCompra);
-}
-monto.innerHTML = `Monto Gastado: ${calcularGasto()}`;
-saldoDisponible.innerHTML = `Saldo Disponible: ${usuarioLogueado.saldo - calcularGasto()}`;
-}
+    let misBotones = document.querySelectorAll(".botonesCan");
+    for(let i = 0; i<misBotones.length; i++){
+        let unBoton = misBotones[i];
+        unBoton.addEventListener("click",cancelarCompra);
+    }
+    monto.innerHTML = `Monto Gastado: ${calcularGasto()}`;
+    saldoDisponible.innerHTML = `Saldo Disponible: ${usuarioLogueado.saldo - calcularGasto()}`;
+    }
+    
+//cargarTablaMisCompras();
 
 
 /*-------FUNCION CALCULAR GASTO TOTAL-----*/
@@ -549,6 +561,7 @@ for (let i = 0; i < misBotones.length; i++) {
 }
 }
 
+/*-------MODIFICAR STOCK-------------*/
 function modificarProducto(){
 let parrafo = document.querySelector("#admProd");
 let modProd = this.getAttribute("data-id");
@@ -574,7 +587,7 @@ if(pEstado === "activo" || pEstado ==="pausado"){
 }
 
 }
-
+/*--------BUSCAR STOCKS--------------*/
 function buscarStocks(misStocks, modProd){
 let miStockCorrecto = null;
 for (let i = 0; i < misStocks.length; i++) {
@@ -585,7 +598,7 @@ for (let i = 0; i < misStocks.length; i++) {
     }
     return miStockCorrecto;
 }
-
+/*--------BUSCAR ESTADOS--------------*/
 function buscarEstados(misEstados,modProd){
     let miEstadoCorrecto = null;
     for (let i = 0; i < misEstados.length; i++) {
@@ -596,7 +609,7 @@ function buscarEstados(misEstados,modProd){
         }
         return miEstadoCorrecto;
 }
-
+/*--------BUSCAR OFERTAS--------------*/
 function buscarOfertas(misOfertas,modProd){
     let miOfertaCorrecta = null;
     for (let i = 0; i < misOfertas.length; i++) {
@@ -607,4 +620,145 @@ function buscarOfertas(misOfertas,modProd){
         }
         return miOfertaCorrecta;
 }
+
+function cargarTablaAprobacion(){
+    cargarTablaComprasPendientes();
+    cargarTablaComprasCanceladas();
+    cargarTablaComprasAprobadas();
+}
+
+function cargarTablaComprasPendientes(){
+    let tablaPendientes = document.querySelector("#listaPendientes"); 
+    tablaPendientes.innerHTML = "";
+    for(i = 0; i< miSistema.compras.length; i++){
+        let administrarCompra = miSistema.compras[i];
+        if(administrarCompra.estado == "Pendiente"){
+           let unTR = document.createElement("tr");
+           let tdUsuario = document.createElement("td");
+           let tdSaldo = document.createElement("td");
+           let tdProducto = document.createElement("td");
+           let tdEstadoProducto = document.createElement("td");
+           let tdCantidad = document.createElement("td");
+           let tdMonto = document.createElement("td");
+           let tdEstado = document.createElement("td");
+           let tdBotonAprobar = document.createElement("td");
+           let unBotonAprobar = document.createElement("input");
+           unBotonAprobar.setAttribute("type","button");
+           unBotonAprobar.setAttribute("value","Aprobar");
+           unBotonAprobar.setAttribute("data-id",administrarCompra.id); 
+           unBotonAprobar.setAttribute("class","botonesAprobar"); 
+           let unBotonCancelar = document.createElement("input");
+           unBotonCancelar.setAttribute("type","button");
+           unBotonCancelar.setAttribute("value","Cancelar");
+           unBotonCancelar.setAttribute("data-id",administrarCompra.id); 
+           unBotonCancelar.setAttribute("class","botonesCancelar");
+           tdUsuario.innerHTML = administrarCompra.cliente.user;
+           tdSaldo.innerHTML = administrarCompra.cliente.saldo;
+           tdProducto.innerHTML = administrarCompra.producto.nombre;
+           tdEstadoProducto.innerHTML = administrarCompra.producto.estado;
+           tdCantidad.innerHTML = administrarCompra.cantidad;
+           tdMonto.innerHTML = administrarCompra.precioCompra;
+           tdEstado.innerHTML = administrarCompra.estado;
+           tdBotonAprobar.appendChild(unBotonAprobar);
+           unTR.appendChild(tdUsuario);
+           unTR.appendChild(tdSaldo);
+           unTR.appendChild(tdProducto);
+           unTR.appendChild(tdEstadoProducto);
+           unTR.appendChild(tdCantidad);
+           unTR.appendChild(tdMonto);
+           unTR.appendChild(tdEstado);
+           unTR.appendChild(unBotonAprobar);
+           unTR.appendChild(unBotonCancelar);
+           tablaPendientes.appendChild(unTR);
+        }
+    }
+    let misBotonesAprobar = document.querySelectorAll(".botonesAprobar");
+    for (let i = 0; i < misBotonesAprobar.length; i++) {
+    let unBotonAprobar = misBotonesAprobar[i];
+    unBotonAprobar.addEventListener("click", aprobarCompraAdmin);
+}
+  let misBotonesCancelar = document.querySelectorAll(".botonesCancelar");
+  for (let i = 0; i < misBotonesCancelar.length; i++) {
+  let unBotonCancelar = misBotonesCancelar[i];
+  unBotonCancelar.addEventListener("click", cancelarCompraAdmin);
+}
+}
+
+function cancelarCompraAdmin(){
+    let miCompra = this.getAttribute("data-id");
+    miSistema.cancelarCompraAdmin(miCompra);
+    cargarTablaAprobacion();
+}
+
+function aprobarCompraAdmin(){
+let miCompra = this.getAttribute("data-id");
+miSistema.aprobarCompraAdmin(miCompra);
+cargarTablaAprobacion();
+
+}
+
+
+function cargarTablaComprasCanceladas(){
+    let tablaCanceladas = document.querySelector("#listaCanceladas"); 
+    tablaCanceladas.innerHTML = "";
+    for(i = 0; i< miSistema.compras.length; i++){
+        let administrarCompra = miSistema.compras[i];
+        if(administrarCompra.estado == "Cancelada"){
+           let unTR = document.createElement("tr");
+           let tdUsuario = document.createElement("td");
+           let tdSaldo = document.createElement("td");
+           let tdProducto = document.createElement("td");
+           let tdCantidad = document.createElement("td");
+           let tdMonto = document.createElement("td");
+           let tdEstado = document.createElement("td");
+           tdUsuario.innerHTML = administrarCompra.cliente.user;
+           tdSaldo.innerHTML = administrarCompra.cliente.saldo;
+           tdProducto.innerHTML = administrarCompra.producto.nombre;
+           tdCantidad.innerHTML = administrarCompra.cantidad;
+           tdMonto.innerHTML = administrarCompra.precioCompra;
+           tdEstado.innerHTML = administrarCompra.estado;
+           unTR.appendChild(tdUsuario);
+           unTR.appendChild(tdSaldo);
+           unTR.appendChild(tdProducto);
+           unTR.appendChild(tdCantidad);
+           unTR.appendChild(tdMonto);
+           unTR.appendChild(tdEstado);
+           tablaCanceladas.appendChild(unTR);
+        }
+    }
+}
+
+/*----------FUNCION CARGAR TABLA COMPRAS APROBADAS--------*/
+function cargarTablaComprasAprobadas(){
+let tablaAprobadas = document.querySelector("#listaAprobadas"); 
+tablaAprobadas.innerHTML = "";
+for(i = 0; i< miSistema.compras.length; i++){
+    let administrarCompra = miSistema.compras[i];
+    if(administrarCompra.estado == "Aprobada"){
+       let unTR = document.createElement("tr");
+       let tdUsuario = document.createElement("td");
+       let tdSaldo = document.createElement("td");
+       let tdProducto = document.createElement("td");
+       let tdCantidad = document.createElement("td");
+       let tdMonto = document.createElement("td");
+       let tdEstado = document.createElement("td");
+       tdUsuario.innerHTML = administrarCompra.cliente.user;
+       tdSaldo.innerHTML = administrarCompra.cliente.saldo;
+       tdProducto.innerHTML = administrarCompra.producto.nombre;
+       tdCantidad.innerHTML = administrarCompra.cantidad;
+       tdMonto.innerHTML = administrarCompra.precioCompra;
+       tdEstado.innerHTML = administrarCompra.estado;
+       unTR.appendChild(tdUsuario);
+       unTR.appendChild(tdSaldo);
+       unTR.appendChild(tdProducto);
+       unTR.appendChild(tdCantidad);
+       unTR.appendChild(tdMonto);
+       unTR.appendChild(tdEstado);
+       tablaAprobadas.appendChild(unTR);
+    }
+}
+
+}
+
+
 

@@ -168,6 +168,25 @@ let miCompra = this.buscarObjetoPor1Parametro(this.compras, "id", idCompra);
 miCompra.estado = "Cancelada";
 }
 
+cancelarCompraAdmin(idCompra){
+let miCompra = this.buscarObjetoPor1Parametro(this.compras, "id" ,idCompra);
+miCompra.estado = "Cancelada";
+}
+
+aprobarCompraAdmin(idCompra){
+let miCompra = this.buscarObjetoPor1Parametro(this.compras, "id" ,idCompra);
+miCompra.estado = "Aprobada";
+miCompra.producto.stock = miCompra.producto.stock - miCompra.cantidad;
+miCompra.cliente.saldo = miCompra.cliente.saldo - miCompra.precioCompra;
+
+if (miCompra.cliente.saldo <= 0) {
+    miCompra.cliente.saldo = 0;
+}
+
+if(miCompra.producto.stock <= 0){
+    miCompra.producto.estado = "pausado";
+}
+}
 
 }
 
@@ -210,7 +229,11 @@ class Producto{
         this.id = `PROD_ID_${++idProducto}`;
     
     }
-    
+    evaluarStock(){
+        if(this.stock == 0){
+            this.estado = "pausado";
+        }
+    }
 }
 let idCompra =0;
 class Compra{
@@ -218,7 +241,7 @@ class Compra{
         this.producto = producto;
         this.cliente = cliente;
         this.cantidad = cantidad;
-        this.estado = "Aprobada"; 
+        this.estado = "Pendiente"; 
         this.precioCompra = this.producto.precio * this.cantidad;
         this.id= ++idCompra;
     }
