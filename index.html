@@ -10,6 +10,7 @@
     <body>
         <header>
             <h1>SWAP E-COMMERCE</h1>
+            <input type="button" value="Logout" class="logout" data-menu="ingreso">
         </header>
 <!--LOGIN-->
 <div class="ventana" id="ingreso">
@@ -20,9 +21,9 @@
         <label for="loginPassword">Ingrese Contraseña</label>
         <input type="text" name="" id="loginPassword" placeholder="***********">
         <br>
-        <input type="button" value="Ingresar" id="btnIngreso">
+        <input type="button" value="Ingresar" id="btnIngreso" data-menu="ingreso">
         <br>
-        <a id="btnIrRegistro">Registrarse aqui si no tienes usuario</a>
+        <input type="button" value="Regístrese aqui" id="btnIrRegistro" data-menu="registro">
         <p id="pIngreso"></p>
 </div>  
 <!--VENTANA REGISTRO-->
@@ -40,14 +41,37 @@
     <label for="registroPassword">Ingrese Contraseña</label>
     <input type="text" name="" id="registroPassword" placeholder="***********">
     <label for="tarjeta">Ingrese Tarjeta de Crédito</label>
-    <input type="text" name="" id="tarjeta" placeholder="WWWW-XXXX-YYYY-ZZZZ">
+    <input type="text" name="" id="tarjeta" placeholder="WWWW-XXXX-YYYY-ZZZZ" value="4539-3715-6707-0872">
     <label for="cvc">Ingrese CVC</label>
     <input type="text" name="" id="cvc" placeholder="CVC">
 </div>
     <input type="button" value="Registrarse" id="btnRegistro">
     <p id="pRegistro"></p>
-    <a id="btnIrlogin">Ir a pantalla de Login</a>
+    <input type="button" value="Login" id="btnIrlogin" data-menu="ingreso">
 </div>  
+
+<!--MENU ADMIN-->
+<div id="menuAdmin" class="ventana">
+    <h2 id="msj1">Bienvenido</h2>
+    <div>
+    <input type="button" value="Crear Productos" class="menusA" id="irAcrearProducto" data-menu="crearProducto">
+    <input type="button" value="Administrar Productos" class="menusA" id="irAgestionarProducto" data-menu="administrarProductos">
+    <input type="button" value="Administrar Compras" class="menusA" data-menu="ingreso">
+    <input type="button" value="Informe de Ganancias" class="menusA" data-menu="ingreso">
+   </div>
+</div>
+
+<!--MENU CLIENTE-->
+<div id="menuCliente" class="ventana">
+    <h2 id="msj">Bienvenido</h2>
+    <div>
+    <input type="button" value="Lista de Productos" class="menusC" id="irAlistaProdMenu" data-menu="listaProductos">
+    <input type="button" value="Ofertas" class="menusC" id="irOfertasMenu" data-menu="listaProductosOferta">
+    <input type="button" value="Mis Compras" class="menusC" id="irAmisComprasMenu" data-menu="listaMisCompras">
+    <p id="sal">Saldo:</p>
+   </div>
+</div>
+
 <!--CREAR PRODUCTO-->
 <div class="ventana" id="crearProducto">
     <section class="crear">
@@ -55,65 +79,140 @@
      <form action="" method="get" autocomplete="on">
          <div class="columna">
          <label for="nombre">Nombre del Producto</label>
-         <input type="text"name="nombre" id="nombre" placeholder="Pelota" >
+         <input type="text"name="nombre" id="nombreProducto" placeholder="Pelota" >
          <label for="precio">Precio</label>
          <input type="text" name="precio" id="precio" placeholder="400$">
          </div>
          <div class="columna">
              <label for="img">URL de la Imagen</label>
              <input type="text" name="img" id="img" placeholder="img/">
-             <label for="asunto">Stock Disponible</label>
-             <input type="text" name="asunto" id="asunto" placeholder="">
+             <label for="stock">Stock Disponible</label>
+             <input type="text" name="asunto" id="stock" placeholder="">
              </div>
              <div class="columna">
-             <label for="desc">Descripcion</label>
-             <textarea name="desc" id="desc" placeholder="Descripcion del producto"></textarea>
+             <label for="descripcion">Descripcion</label>
+             <textarea name="desc" id="descripcion" placeholder="Descripcion del producto"></textarea>
              <input type="button" value="Crear Producto" id="btnCrearProducto">
-             <a id="irListaProd">Ver Lista de Productos</a>
+             <a id="volverMenuAdmin" data-menu="menuAdmin">Volver al Menu</a>
+             <p id="pCrearProducto"></p>
          </div>
         </form>
     </section>
  </div>
-<!--------------------------LISTA DE PRODUCTOS------------------------------------>
-<div class="ventana" id="listaProductos">
-<section class="lista">
+
+<!---LISTA DE PRODUCTOS-->
+<div class="ventana" id="listaProductos"> <!--CLIENTE-->
+    <section class="lista">
+        <div class="centrado">
+          <h2>Lista de Productos</h2>
+            <table>
+                <thead> 
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Producto</th>
+                        <th>Precio</th> 
+                        <th>Cantidad</th>
+                        <th>Oferta</th>
+                        <th>Comprar</th>
+                    </tr>
+                </thead>
+                <tbody id="tableProductos">
+                </tbody>
+               </table>
+               <div>
+                <a id="irOfertas1" data-menu="listaProductosOferta">Ver productos en Oferta</a>
+                <a id="irMisCompras" data-menu="listaMisCompras">Mis Compras</a>
+                <a id="volverMenuCliente" data-menu="menuCliente">Volver al Menu</a>
+                <p id="pLista"></p>
+            </div>
+        </div>
+       </section>
+    </div>
+
+<div class="ventana" id="listaProductosOferta"> <!--CLIENTE-->
+        <section class="lista">
+            <div class="centrado">
+              <h2>Lista de Productos</h2>
+                <table>
+                    <thead> 
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Producto</th>
+                            <th>Precio</th> 
+                            <th>Cantidad</th>
+                            <th>Oferta</th>
+                            <th>Comprar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableProductosOferta">
+                    </tbody>
+                   </table>
+                   <div>
+                    <a id="irMisCompras1" data-menu="listaMisCompras">Mis Compras</a>
+                    <a id="volverMenuCliente2" data-menu="menuCliente">Volver al Menu</a>
+                </div>
+            </div>
+           </section>
+</div>
+
+ <!--ADMINISTRAR PRODUCTOS-->   
+ <section class="ventana" id="administrarProductos">
     <div class="centrado">
-      <h2>Lista de Productos</h2>
+      <h2>Lista de Productos Creados</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Imagen</th>
                     <th>Producto</th>
                     <th>ID</th>
                     <th>Precio</th> 
                     <th>Stock</th>
+                    <th>Estado</th>
                     <th>Oferta</th>
-                    <th>Cantidad</th>
-                    <th>Comprar</th>
+                    <th></th>
                 </tr>
             </thead>
-            <tbody>
-                 <tr>
-                    <td><img src="/AdminstrarProductos/img/pelota-adidas-wucl-lge-pelota-adidas-wucl-lge.jpg" alt=""></td>
-                    <td>Pelota</td>
-                    <td>ID01</td>
-                    <td>330$</td>
-                    <td>3</td>
-                    <td><input type="checkbox" name="" id="oferta" checked="true" ></td>
-                    <td><input type="number" name="cantidad" id="cantidad"></td>
-                    <td><input type="button" value="Comprar" id="btn"></td>
-                 </tr>
+            <tbody id="tableAdministrarProductos">
             </tbody>
            </table>
-           <div class="botones">
-        </div>
+           <p id="admProd"></p>
+           <p>Solo se aceptan los valores "activo", "pausado", "false" y "true"</p> 
+           <a id="volverMenuAdmin1"  data-menu="menuAdmin">Volver al Menu</a>
     </div>
-   </section>
-</div>
+   </section>     
+<!---LISTA DE MIS COMPRAS-->
+    <section class="ventana" id="listaMisCompras">
+        <div class="centrado">
+            <div class="filtro">
+                <h2>Mi lista de compras</h2>
+                <select name="" id="estado">
+                    <option value="Estados">Estados</option>
+                    <option value="Aprobadas">Aprobadas</option>
+                     <option value="Pendientes">Pendientes</option>
+                     <option value="Canceladas">Canceladas</option>
+                    </select>
+                <a id="volverMenuCliente1" data-menu="menuCliente">Volver al Menu</a>
+            </div>
+            <table id="">
+                <thead>
+                    <tr>
+                        <th>Nombre Producto</th>
+                        <th>Cantidad</th>
+                        <th>Monto Total</th> 
+                        <th>Estado</th>
+                        <th>Cancelar Compra</th>
+                    </tr>
+                </thead>
+                <tbody id="tableMisCompras">
 
-
- <!--ADMINISTRAR PRODUCTOS-->        
-    
+                </tbody>
+               </table>
+               <h3>Compras Aprobadas:</h3>
+               <p id="monto"></p>
+               <p id="saldoDisponible"></p>
+        </div>
+       </section>  
+ <!---LISTA DE MIS COMPRAS APROBADAS-->
+       
     
     
         
