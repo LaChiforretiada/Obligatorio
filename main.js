@@ -1,14 +1,31 @@
+/*----------------------FUNCIONES LOGICAS------------*/
 document.querySelector("#btnIngreso").addEventListener("click", login);
 document.querySelector("#btnRegistro").addEventListener("click", registro);
-document.querySelector("#btnIrRegistro").addEventListener("click", mostrarRegistro);
-document.querySelector("#btnIrlogin").addEventListener("click", mostrarLogin);
+document.querySelector("#btnCrearProducto").addEventListener("click", crearProducto);
 
-
+/*-------------CAMBIAR PANTALLAS------------------*/
+document.querySelector("#btnIrRegistro").addEventListener("click", moverMenu);
+document.querySelector("#btnIrlogin").addEventListener("click", moverMenu);
+document.querySelector("#volverMenuAdmin").addEventListener("click", moverMenu);
+document.querySelector("#volverMenuAdmin1").addEventListener("click", moverMenu);
+document.querySelector("#volverMenuCliente").addEventListener("click", moverMenu);
+document.querySelector("#volverMenuCliente1").addEventListener("click", moverMenu);
+document.querySelector("#volverMenuCliente2").addEventListener("click", moverMenu);
+document.querySelector(".logout").addEventListener("click", logout);
+document.querySelector("#irAcrearProducto").addEventListener("click", moverMenu);
+document.querySelector("#irAgestionarProducto").addEventListener("click", refrescarListaAdministrar);
+document.querySelector("#irMisCompras").addEventListener("click", refrescarListaMisCompras);
+document.querySelector("#irMisCompras1").addEventListener("click", refrescarListaMisCompras);
+document.querySelector("#irAmisComprasMenu").addEventListener("click", refrescarListaMisCompras);
+document.querySelector("#irAlistaProdMenu").addEventListener("click", refrescarListaProductos);
+document.querySelector("#irOfertasMenu").addEventListener("click", cargarTablaOfertas);
+document.querySelector("#irOfertas1").addEventListener("click", cargarTablaOfertas);
 
 
 /*-----------------Funcion LOGIN---------------*/
 let miSistema = new Sistema();
 miSistema.precargarDatos();
+
 let usuarioLogueado;
 
 function login(){
@@ -21,14 +38,48 @@ function login(){
             parrafo.innerHTML = "Usuario o Contrasenia es incorrecta";
         }else if(busquedaUsuario.tipo == "Admin"){
                 usuarioLogueado = busquedaUsuario;
-                cambiarPantalla("#crearProducto");
+                let nombre = `Bienvenido ${usuarioLogueado.user.toUpperCase()}`;
+                msj1.innerHTML = nombre;  
+                cambiarPantalla("#menuAdmin");
         }else if (busquedaUsuario.tipo == "Cliente"){
             usuarioLogueado = busquedaUsuario;
-                cambiarPantalla("#listaProductos");
+            let nombre = `Bienvenido ${usuarioLogueado.user.toUpperCase()}`;
+            msj.innerHTML = nombre;  
+            let saldo = `Saldo: ${usuarioLogueado.saldo}`;
+            sal.innerHTML = saldo;
+            cambiarPantalla("#menuCliente");
+           
         }
     }else{
-        parrafo.innerHTML = "La contraseña debe tener al menos 5 caracteres";
+        parrafo.innerHTML = "Usuario o password es incorrecta";
     }
+}
+
+/*----------------FUNCION MOVER MENU---------------------*/
+function moverMenu(){
+    let destino = "#" + this.getAttribute("data-menu");
+    cambiarPantalla(destino);
+}
+
+function refrescarListaProductos(){
+cargarTablaProductos();
+cambiarPantalla("#listaProductos");
+}
+
+function refrescarListaMisCompras(){
+    cargarTablaMisCompras();
+    cambiarPantalla("#listaMisCompras");
+}
+
+function refrescarListaAdministrar(){
+    cargaAdministrarProductos();
+    cambiarPantalla("#administrarProductos")
+}
+
+/*-------------FUNCION LOG OUT-----------*/
+function logout(){
+    usuarioLogueado = null;
+    cambiarPantalla("#ingreso");
 }
 /*----------------FUNCION REGISTRO---------------------*/
 function registro(){
@@ -40,29 +91,61 @@ let tarjeta = document.querySelector("#tarjeta").value;
 let tarjetaVerificada = verificarFormatoTarjeta(tarjeta);
 let cvc = document.querySelector("#cvc").value;
 let parrafo = document.querySelector("#pRegistro");
-if(verificarPassword(password) == true){
-   if(verificarTarjeta(tarjetaVerificada) == true){
-       if(verificarCvc(cvc) == true){
-        let busquedaCliente = miSistema.registroCliente(nombre,apellido,user,password,tarjeta,cvc);
-        if(busquedaCliente == null){
-           parrafo.innerHTML = "Registro invalido";
-        }else{
-           parrafo.innerHTML = `Registro Valido. Bienvenido ${nombre}`;
-        }
-       }else{
-        parrafo.innerHTML = "CVC invalido";
-       }
-   }else{
-    parrafo.innerHTML = "Tarjeta Invalida";
-   }
+if(nombre.length> 0 && apellido.length >0){
+    if(user.length >0){
+        if(verificarPassword(password) == true){
+            if(verificarTarjeta(tarjetaVerificada) == true){
+                if(verificarCvc(cvc) == true){
+                 let busquedaCliente = miSistema.registroCliente(nombre,apellido,user,password,tarjeta,cvc);
+                 if(busquedaCliente == null){
+                    parrafo.innerHTML = "Registro invalido";
+                 }else{
+                    parrafo.innerHTML = `Registro Valido. Bienvenido ${nombre}`;
+                 }
+                }else{
+                 parrafo.innerHTML = "CVC invalido";
+                }
+            }else{
+             parrafo.innerHTML = "Tarjeta Invalida";
+            }
+         }else{
+             parrafo.innerHTML = "Password invalida. Debe contener al menos 5 caracteres, mayuscula, minuscula y al menos un numero";
+         }
+    }else{
+        parrafo.innerHTML = "Usuario debe contener al menos 1 caracter"
+    }
 }else{
-    parrafo.innerHTML = "Contrasenia invalida";
+    parrafo.innerHTML = "Nombre y Apellido deben contener al menos 1 caracter";
+}
 }
 
+/*-------------FUNCION CREAR PRODCUTOS-------------*/
+function crearProducto(){
+let nombreProducto = document.querySelector("#nombreProducto").value;
+let precioProducto = parseInt(document.querySelector("#precio").value);
+let imagen = document.querySelector("#img").value;
+let stock = parseInt(document.querySelector("#stock").value);
+let descripcion = document.querySelector("#descripcion").value;
+let validacionProducto = validarCamposAlCrearProducto(precioProducto,stock);
+let parrafo = document.querySelector("#pCrearProducto");
+if(nombreProducto.length > 0  && descripcion.length> 0 && imagen.length > 0){
+       if(validacionProducto == true){
+           let buscarProducto = miSistema.crearProducto(nombreProducto,precioProducto,descripcion,imagen,stock);
+           if(buscarProducto == null){
+              parrafo.innerHTML = "No se pudo crear producto";
+           }else{
+            parrafo.innerHTML = "Producto Creado";
+            cargarTablaProductos();
+           }
+       }else{
+           parrafo.innerHTML = "Stock y Precio deben ser numericos mayor a 0";
+       }
+}else{
+  parrafo.innerHTML = "Todos los campos deben tener datos";
+}
 }
 
-
-/*----------------Pantallas----------------------------*/
+/*----------------FUNCION PANTALLAS----------------------------*/
 function cambiarPantalla(activa){
     let pantallas = document.querySelectorAll(".ventana");
     for(i = 0; i<pantallas.length;i++){
@@ -74,13 +157,6 @@ function cambiarPantalla(activa){
 
 cambiarPantalla("#ingreso");
 
-function mostrarRegistro(){
-    cambiarPantalla("#registro");
-}
-
-function mostrarLogin(){
-    cambiarPantalla("#ingreso");
-}
 
 
 /*------FUNCION PARA VALIDAR PASSWORD-----*/
@@ -92,7 +168,7 @@ let unNumero = false;
 if(password.length >= 5){
     let i=0;
     while(i<password.length && mayus == false){
-        if(password[i] == password[i].toUpperCase()){
+        if(password[i] == password[i].toUpperCase() && password[i] !== password[i].toLowerCase()){
             mayus = true;
         }
         i++;
@@ -142,43 +218,35 @@ let resultado = false;
         resultado = true;
         return resultado;
     }
-
 }
 
 /*------FUNCION PARA EL FORMATO NUMERICO DE LA TARJETA DE CREDITO-----*/
 
 function verificarFormatoTarjeta(tarjeta){
-let formato = false;
-let resultado = "";
-    if (tarjeta[4] == "-" && tarjeta[9] == "-" &&tarjeta[14] == "-") {   
-       formato = true;
-    }else{
-      resultado = "Formato tarjeta invalido";
-      return resultado;
-    }
-    if(formato == true){
-        for (let i = 0; i < tarjeta.length; i++) {
-        
-            if (tarjeta[i] != "-") {
-
-                resultado += tarjeta[i];
-                
-            }
-
+    let resultado = "";
+    let validadorContador = 0;
+    if (tarjeta[4] == "-" && tarjeta[9] == "-" &&tarjeta[14] == "-") {
+           for (let i = 0; i < 19; i++) {
+            let contadorNumeros = tarjeta[i];
+                if (!isNaN(contadorNumeros) && validadorContador < 17) {
+                    validadorContador++
+                }
+           }
         }
-        return resultado;
+        if(validadorContador == 16){
+            for (let i = 0; i < tarjeta.length; i++) {
+    
+                if (tarjeta[i] != "-") {
+    
+                    resultado += tarjeta[i];
+                }
+            }
+            return resultado;
+        }else{
+            resultado = "Formato tarjeta invalido";
+            return resultado;
+          }
     }
-}
-
-
-
-
-
-
-
-
-
-
 
 /*------FUNCION PARA VALIDAR NUMERO DE TARJETA DE CREDITO-----*/
 
@@ -212,5 +280,331 @@ function verificarTarjeta(tarjetaVerificada){
   return resultado;
   }
 
+  /*-----------FUNCION PARA VALIDAR CAMPOS AL CREAR PRODUCTO---------*/
+function validarCamposAlCrearProducto(precioProducto,stock){
+let resultado = false;
 
-  
+if(!isNaN(precioProducto) && !isNaN(stock)){
+
+    resultado = true;
+
+}
+return resultado;
+}
+
+ /*-----------FUNCION PARA CARGAR TABLA PRODUCTOS---------*/
+ function cargarTablaProductos(){
+    let tabla = document.querySelector("#tableProductos");
+    tabla.innerHTML = "";
+    for(let i = 0; i < miSistema.productos.length; i++){
+        let unProducto = miSistema.productos[i];
+        if(unProducto.estado == "activo"){
+            let unTR = document.createElement("tr");
+            let tdImagen = document.createElement("td");
+            let tdNombre = document.createElement("td");
+            let tdPrecio = document.createElement("td");
+            let tdCantidad = document.createElement("td");
+            let tdOferta = document.createElement("td");
+            let tdComprar = document.createElement("td");
+            tdNombre.innerHTML = unProducto.nombre;
+            tdPrecio.innerHTML = unProducto.precio;
+            let unBoton = document.createElement("input");
+            unBoton.setAttribute("type","button");
+            unBoton.setAttribute("value","Comprar");
+            unBoton.setAttribute("data-id",unProducto.id); 
+            unBoton.setAttribute("class","botones");   
+            let unaCantidad = document.createElement("input");
+            unaCantidad.setAttribute("type","number");
+            unaCantidad.setAttribute("data-id", unProducto.id);
+            unaCantidad.setAttribute("class", "cantidad");  
+            let unaImagen = document.createElement("img");
+            unaImagen.setAttribute("src",unProducto.imagen);
+            let unaOferta = document.createElement("input");
+            unaOferta.setAttribute("type", "checkbox");
+            if(unProducto.oferta == false){
+               unaOferta.setAttribute("disabled","true")
+            }else{
+                unaOferta.setAttribute("checked","true")
+            }
+            tdImagen.appendChild(unaImagen);   
+            tdCantidad.appendChild(unaCantidad);
+            tdOferta.appendChild(unaOferta)
+            tdComprar.appendChild(unBoton);
+            unTR.appendChild(tdImagen);
+            unTR.appendChild(tdNombre);
+            unTR.appendChild(tdPrecio);
+            unTR.appendChild(tdCantidad);
+            unTR.appendChild(tdOferta);
+            unTR.appendChild(tdComprar);
+            tabla.appendChild(unTR);
+        }
+       
+    }
+    let misBotones = document.querySelectorAll(".botones");
+    for(let i = 0; i<misBotones.length; i++){
+        let unBoton = misBotones[i];
+        unBoton.addEventListener("click",realizarCompra);
+    }
+}
+
+/*-----------CARGAR TABLA DE OFERTAS------------*/
+function cargarTablaOfertas(){
+    let tabla = document.querySelector("#tableProductosOferta");
+    tabla.innerHTML = "";
+    for(let i = 0; i < miSistema.productos.length; i++){
+        let unProducto = miSistema.productos[i];
+        if(unProducto.estado == "activo"){
+            if(unProducto.oferta == true){
+                let unTR = document.createElement("tr");
+                let tdImagen = document.createElement("td");
+                let tdNombre = document.createElement("td");
+                let tdPrecio = document.createElement("td");
+                let tdCantidad = document.createElement("td");
+                let tdOferta = document.createElement("td");
+                let tdComprar = document.createElement("td");
+                tdNombre.innerHTML = unProducto.nombre;
+                tdPrecio.innerHTML = unProducto.precio;
+                let unBoton = document.createElement("input");
+                unBoton.setAttribute("type","button");
+                unBoton.setAttribute("value","Comprar");
+                unBoton.setAttribute("data-id",unProducto.id); 
+                unBoton.setAttribute("class","botonesOff");   
+                let unaCantidad = document.createElement("input");
+                unaCantidad.setAttribute("type","number");
+                unaCantidad.setAttribute("data-id", unProducto.id);
+                unaCantidad.setAttribute("class", "cantidad");  
+                let unaImagen = document.createElement("img");
+                unaImagen.setAttribute("src",unProducto.imagen);
+                let unaOferta = document.createElement("input");
+                unaOferta.setAttribute("type", "checkbox");
+                if(unProducto.oferta == false){
+                   unaOferta.setAttribute("disabled","true")
+                }else{
+                    unaOferta.setAttribute("checked","true")
+                }
+                tdImagen.appendChild(unaImagen);   
+                tdCantidad.appendChild(unaCantidad);
+                tdOferta.appendChild(unaOferta)
+                tdComprar.appendChild(unBoton);
+                unTR.appendChild(tdImagen);
+                unTR.appendChild(tdNombre);
+                unTR.appendChild(tdPrecio);
+                unTR.appendChild(tdCantidad);
+                unTR.appendChild(tdOferta);
+                unTR.appendChild(tdComprar);
+                tabla.appendChild(unTR);
+            }
+            
+        }
+       
+    }
+    cambiarPantalla("#listaProductosOferta");
+    let misBotones = document.querySelectorAll(".botonesOff");
+    for(let i = 0; i<misBotones.length; i++){
+        let unBoton = misBotones[i];
+        unBoton.addEventListener("click",realizarCompra);
+    }  
+}
+
+/*----------CARGAR TABLA MIS COMPRAS------------*/
+function cargarTablaMisCompras(){
+let filtro =  document.querySelector("#estado").value;
+let tabla = document.querySelector("#tableMisCompras");
+tabla.innerHTML = "";
+for(i=0;i<usuarioLogueado.misCompras.length;i++){
+let unaCompra = usuarioLogueado.misCompras[i];
+let unTR = document.createElement("tr");
+let tdNombreC = document.createElement("td");
+let tdCantidad = document.createElement("td");
+let tdMonto = document.createElement("td");
+let tdEstado = document.createElement("td");
+let tdCancelar = document.createElement("td");
+tdNombreC.innerHTML = unaCompra.producto.nombre;
+tdCantidad.innerHTML = unaCompra.cantidad;
+tdMonto.innerHTML = unaCompra.precioCompra;
+tdEstado.innerHTML= unaCompra.estado;
+let cancelarCompra =  document.createElement("input");
+cancelarCompra.setAttribute("type","button");
+cancelarCompra.setAttribute("value","Cancelar Compra");
+cancelarCompra.setAttribute("data-id",unaCompra.id); 
+cancelarCompra.setAttribute("class","botonesCan");  
+if(unaCompra.estado != "Pendiente"){
+    cancelarCompra.setAttribute("disabled","true");
+}
+tdCancelar.appendChild(cancelarCompra);
+unTR.appendChild(tdNombreC);
+unTR.appendChild(tdCantidad);
+unTR.appendChild(tdMonto);
+unTR.appendChild(tdEstado);
+unTR.appendChild(tdCancelar);
+tabla.appendChild(unTR);
+}
+let misBotones = document.querySelectorAll(".botonesCan");
+for(let i = 0; i<misBotones.length; i++){
+    let unBoton = misBotones[i];
+    unBoton.addEventListener("click",cancelarCompra);
+}
+monto.innerHTML = `Monto Gastado: ${calcularGasto()}`;
+saldoDisponible.innerHTML = `Saldo Disponible: ${usuarioLogueado.saldo - calcularGasto()}`;
+}
+
+
+/*-------FUNCION CALCULAR GASTO TOTAL-----*/
+function calcularGasto(){
+let gastado = 0;
+for(i=0;i<usuarioLogueado.misCompras.length;i++){
+let unaCompra = usuarioLogueado.misCompras[i];
+if(unaCompra.estado == "Aprobada"){
+   gastado = unaCompra.precioCompra;
+}
+}
+return gastado;   
+}
+/*---------FUNCION CANCELAR COMPRA----------*/
+function cancelarCompra(){
+let miCompra = this.getAttribute("data-id");
+miSistema.cancelCompra(miCompra);
+cargarTablaMisCompras();
+}
+
+/*---------FUNCION REALIZAR COMPRA-----------*/
+function realizarCompra(){
+    let parrafo = document.querySelector("#pLista");
+    let miProducto = this.getAttribute("data-id");
+    let misCantidades = document.querySelectorAll('input.cantidad');
+    let inputCantidadCorrecto = null;
+    for (let i = 0; i < misCantidades.length; i++) {
+        if (misCantidades[i].getAttribute("data-id") === miProducto) {
+            inputCantidadCorrecto = misCantidades[i];
+            break;  
+        }
+    }
+     let cantidad = parseInt(inputCantidadCorrecto.value);
+     if(cantidad >0){
+        miSistema.nuevaCompra(miProducto,cantidad,usuarioLogueado);
+        cargarTablaMisCompras();
+        parrafo.innerHTML = `Compra Exitosa!`;
+     }else{
+        parrafo.innerHTML= "Ingrese cantidad positiva";
+     }
+    //let inputCantidad = document.querySelector(`input.cantidad[data-id="${miProducto}"]`);
+    //let cantidad = parseInt(inputCantidad.value);
+ 
+}
+
+/*--------------------FUNCION ADMINISTRAR PRODUCTOS-----*/
+function cargaAdministrarProductos(){
+let tabla = document.querySelector("#tableAdministrarProductos");
+tabla.innerHTML = "";
+for(i=0;i<miSistema.productos.length;i++){
+    let administrarProducto = miSistema.productos[i];
+    let unTR = document.createElement("tr");
+    let tdProducto = document.createElement("td");
+    let tdId = document.createElement("td");
+    let tdPrecio = document.createElement("td");
+    let tdStock = document.createElement("td");
+    let tdEstado = document.createElement("td");
+    let tdOferta = document.createElement("td");
+    let tdModificar = document.createElement("td");
+    tdProducto.innerHTML = administrarProducto.nombre;
+    tdId.innerHTML = administrarProducto.id;
+    tdPrecio.innerHTML = administrarProducto.precio;
+    let modificarStock =document.createElement("input");
+    modificarStock.setAttribute("type", "number");
+    modificarStock.setAttribute("value",administrarProducto.stock);
+    modificarStock.setAttribute("data-id", administrarProducto.id);
+    modificarStock.setAttribute("class", "modificarStock");
+    let unBoton = document.createElement("input");
+    unBoton.setAttribute("type","button");
+    unBoton.setAttribute("value","Modificar");
+    unBoton.setAttribute("data-id",administrarProducto.id); 
+    unBoton.setAttribute("class","botonesModificar"); 
+    let inputEstado = document.createElement("input");
+    inputEstado.setAttribute("type", "text");
+    inputEstado.setAttribute("value",administrarProducto.estado);
+    inputEstado.setAttribute("data-id", administrarProducto.id);
+    inputEstado.setAttribute("class", "cambiarEstado");
+    let inputOferta = document.createElement("input");
+    inputOferta.setAttribute("type", "text");
+    inputOferta.setAttribute("value", administrarProducto.oferta)
+    inputOferta.setAttribute("data-id", administrarProducto.id);
+    inputOferta.setAttribute("class", "cambiarOferta")
+    tdOferta.appendChild(inputOferta);
+    tdEstado.appendChild(inputEstado);
+    tdStock.appendChild(modificarStock);
+    tdModificar.appendChild(unBoton);
+    unTR.appendChild(tdProducto);
+    unTR.appendChild(tdId);
+    unTR.appendChild(tdPrecio);
+    unTR.appendChild(tdStock);
+    unTR.appendChild(tdEstado);
+    unTR.appendChild(tdOferta);
+    unTR.appendChild(tdModificar);
+    tabla.appendChild(unTR);
+}
+let misBotones = document.querySelectorAll(".botonesModificar");
+for (let i = 0; i < misBotones.length; i++) {
+    let unBoton = misBotones[i];
+    unBoton.addEventListener("click", modificarProducto)
+}
+}
+
+function modificarProducto(){
+let parrafo = document.querySelector("#admProd");
+let modProd = this.getAttribute("data-id");
+let miStocks = document.querySelectorAll('input.modificarStock');
+let misEstados = document.querySelectorAll('input.cambiarEstado');
+let misOfertas = document.querySelectorAll('input.cambiarOferta');
+let miStockCorrecto = buscarStocks(miStocks, modProd);
+let miEstadoCorrecto = buscarEstados(misEstados, modProd);
+let miOfertaCorrecta = buscarOfertas(misOfertas, modProd);
+let pStock= miStockCorrecto.value;
+let pEstado = miEstadoCorrecto.value;
+let pOferta = miOfertaCorrecta.value;
+if(pEstado === "activo" || pEstado ==="pausado"){
+   if(pOferta ==="true" || pOferta ==="false"){
+   let prodModificado = miSistema.realizarModificacion(modProd,pStock,pEstado,pOferta);
+    cargaAdministrarProductos();
+    parrafo.innerHTML = `Modificacion exitosa de ${prodModificado.nombre}, (${prodModificado.id})`;
+   }else{
+     parrafo.innerHTML = "Lea las instrucciones";
+   }
+}else{
+    parrafo.innerHTML = "Lea las instrucciones"; 
+}
+
+}
+
+function buscarStocks(misStocks, modProd){
+let miStockCorrecto = null;
+for (let i = 0; i < misStocks.length; i++) {
+        if (misStocks[i].getAttribute("data-id") === modProd) {
+            miStockCorrecto = misStocks[i];
+            break;  
+        }
+    }
+    return miStockCorrecto;
+}
+
+function buscarEstados(misEstados,modProd){
+    let miEstadoCorrecto = null;
+    for (let i = 0; i < misEstados.length; i++) {
+            if (misEstados[i].getAttribute("data-id") === modProd) {
+                miEstadoCorrecto = misEstados[i];
+                break;  
+            }
+        }
+        return miEstadoCorrecto;
+}
+
+function buscarOfertas(misOfertas,modProd){
+    let miOfertaCorrecta = null;
+    for (let i = 0; i < misOfertas.length; i++) {
+            if (misOfertas[i].getAttribute("data-id") === modProd) {
+                miOfertaCorrecta = misOfertas[i];
+                break;  
+            }
+        }
+        return miOfertaCorrecta;
+}
+
