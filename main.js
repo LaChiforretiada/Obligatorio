@@ -9,6 +9,8 @@ document.querySelector("#btnIrRegistro").addEventListener("click", moverMenu);
 document.querySelector("#btnIrlogin").addEventListener("click", moverMenu);
 document.querySelector("#volverMenuAdmin").addEventListener("click", moverMenu);
 document.querySelector("#volverMenuAdmin1").addEventListener("click", moverMenu);
+document.querySelector("#volverMenuAdmin2").addEventListener("click", moverMenu);
+document.querySelector("#volverMenuAdmin3").addEventListener("click", moverMenu);
 document.querySelector("#volverMenuCliente").addEventListener("click", moverMenu);
 document.querySelector("#volverMenuCliente1").addEventListener("click", moverMenu);
 document.querySelector("#volverMenuCliente2").addEventListener("click", moverMenu);
@@ -22,6 +24,7 @@ document.querySelector("#irAlistaProdMenu").addEventListener("click", refrescarL
 document.querySelector("#irOfertasMenu").addEventListener("click", cargarTablaOfertas);
 document.querySelector("#irOfertas1").addEventListener("click", cargarTablaOfertas);
 document.querySelector("#irAlistaAprobacionCompras").addEventListener("click", refrescarListaAprobacionCompras);
+document.querySelector("#irAInformeDeGanancias").addEventListener("click", refrescarInformeGanancias);
 
 
 /*-----------------Funcion LOGIN---------------*/
@@ -79,6 +82,11 @@ function refrescarListaAdministrar(){
 function refrescarListaAprobacionCompras(){
     cargarTablaAprobacion();
     cambiarPantalla("#listaAprobacionCompras");
+}
+
+function refrescarInformeGanancias(){
+    cargarInformeGanancias();
+    cambiarPantalla("#listaInformeGanancias");
 }
 
 /*-------------FUNCION LOG OUT-----------*/
@@ -153,7 +161,7 @@ if(nombreProducto.length > 0  && descripcion.length> 0 && imagen.length > 0){
 /*----------------FUNCION PANTALLAS----------------------------*/
 function cambiarPantalla(activa){
     let pantallas = document.querySelectorAll(".ventana");
-    for(i = 0; i<pantallas.length;i++){
+    for(let i = 0; i<pantallas.length;i++){
     let unaPantalla = pantallas[i];
     unaPantalla.style.display = "none";
     }
@@ -418,7 +426,7 @@ function cargarTablaMisCompras(){
     let filtro =  document.querySelector("#estado").value;
     let tabla = document.querySelector("#tableMisCompras");
     tabla.innerHTML = "";
-    for(i=0;i<usuarioLogueado.misCompras.length;i++){
+    for(let i=0;i<usuarioLogueado.misCompras.length;i++){
     let unaCompra = usuarioLogueado.misCompras[i];
     let unTR = document.createElement("tr");
     let tdNombreC = document.createElement("td");
@@ -455,28 +463,36 @@ if(unaCompra.estado == filtro || filtro === "TodasLasCompras"){
         unBoton.addEventListener("click",cancelarCompra);
     }
     monto.innerHTML = `Monto Gastado: ${calcularGasto()}`;
-    saldoDisponible.innerHTML = `Saldo Disponible: ${usuarioLogueado.saldo - calcularGasto()}`;
+    saldoDisponible.innerHTML = `Saldo Disponible: ${usuarioLogueado.saldo}`;
     }
     
 //cargarTablaMisCompras();
 
 
-/*-------FUNCION CALCULAR GASTO TOTAL-----*/
+/*-------FUNCION CALCULAR GASTO DE USUARIO LOAGUEADO-----*/
 function calcularGasto(){
 let gastado = 0;
-for(i=0;i<usuarioLogueado.misCompras.length;i++){
+for(let i=0;i<usuarioLogueado.misCompras.length;i++){
 let unaCompra = usuarioLogueado.misCompras[i];
 if(unaCompra.estado == "Aprobada"){
-   gastado = unaCompra.precioCompra;
+   gastado += unaCompra.precioCompra;
 }
 }
 return gastado;   
 }
 /*---------FUNCION CANCELAR COMPRA----------*/
 function cancelarCompra(){
+let pCompras = document.querySelector("#pCompras");
+let confirmacion = confirm("Seguro que quieres cancelar la compra?")
 let miCompra = this.getAttribute("data-id");
-miSistema.cancelCompra(miCompra);
-cargarTablaMisCompras();
+if(confirmacion == true){
+  miSistema.cancelCompra(miCompra);
+   pCompras.innerHTML = "Compra Cancelada"
+  cargarTablaMisCompras();
+}else{
+    pCompras.innerHTML = "Compra NO Cancelada"
+}
+
 }
 
 /*---------FUNCION REALIZAR COMPRA-----------*/
@@ -508,7 +524,7 @@ function realizarCompra(){
 function cargaAdministrarProductos(){
 let tabla = document.querySelector("#tableAdministrarProductos");
 tabla.innerHTML = "";
-for(i=0;i<miSistema.productos.length;i++){
+for(let i=0;i<miSistema.productos.length;i++){
     let administrarProducto = miSistema.productos[i];
     let unTR = document.createElement("tr");
     let tdProducto = document.createElement("td");
@@ -630,7 +646,7 @@ function cargarTablaAprobacion(){
 function cargarTablaComprasPendientes(){
     let tablaPendientes = document.querySelector("#listaPendientes"); 
     tablaPendientes.innerHTML = "";
-    for(i = 0; i< miSistema.compras.length; i++){
+    for(let i = 0; i< miSistema.compras.length; i++){
         let administrarCompra = miSistema.compras[i];
         if(administrarCompra.estado == "Pendiente"){
            let unTR = document.createElement("tr");
@@ -701,7 +717,7 @@ cargarTablaAprobacion();
 function cargarTablaComprasCanceladas(){
     let tablaCanceladas = document.querySelector("#listaCanceladas"); 
     tablaCanceladas.innerHTML = "";
-    for(i = 0; i< miSistema.compras.length; i++){
+    for(let i = 0; i< miSistema.compras.length; i++){
         let administrarCompra = miSistema.compras[i];
         if(administrarCompra.estado == "Cancelada"){
            let unTR = document.createElement("tr");
@@ -732,7 +748,7 @@ function cargarTablaComprasCanceladas(){
 function cargarTablaComprasAprobadas(){
 let tablaAprobadas = document.querySelector("#listaAprobadas"); 
 tablaAprobadas.innerHTML = "";
-for(i = 0; i< miSistema.compras.length; i++){
+for(let i = 0; i< miSistema.compras.length; i++){
     let administrarCompra = miSistema.compras[i];
     if(administrarCompra.estado == "Aprobada"){
        let unTR = document.createElement("tr");
@@ -757,8 +773,40 @@ for(i = 0; i< miSistema.compras.length; i++){
        tablaAprobadas.appendChild(unTR);
     }
 }
-
 }
 
+/*---------FUNCION CARGAR INFROME GANANCIAS--------*/
+function cargarInformeGanancias(){
+let tablaInforme = document.querySelector("#tablaInformeGanancias");
+tablaInforme.innerHTML = "";
+let productos = [];
+for(let i = 0; i< miSistema.compras.length; i++){
+    let miCompra = miSistema.compras[i];
+    if(miCompra.estado == "Aprobada"){
+    let productoId = miCompra.producto.id;
+    if(!productos[productoId]){
+        let unTR = document.createElement("tr");
+        let tdProducto = document.createElement("td");
+        let tdCantidadVendidas = document.createElement("td");
+        let tdTotales = document.createElement("td");
+        tdProducto.innerHTML =  `${miCompra.producto.nombre} (${miCompra.producto.id})`;
+        tdCantidadVendidas.innerHTML = miCompra.producto.unidadesVendidas;
+        tdTotales.innerHTML =  gananciaTotalCompras();
+        unTR.appendChild(tdProducto);
+        unTR.appendChild(tdCantidadVendidas);
+        unTR.appendChild(tdTotales);
+        tablaInforme.appendChild(unTR);
+        productos[productoId] = true;  //ayudin de chatgipiti para no mostrar el productos dos veces con el mismo calculo
+    }
+    }
+}
+}
+/*En esta vista, el administrador, deberá ver en un párrafo, la cantidad total de
+vendida (unidades) de cada producto y la ganancia total por todas las compras
+realizadas por los usuarios.*/
 
+function gananciaTotalCompras(){
+let total = miSistema.gananciaTotal();
+return total;
+}
 

@@ -57,7 +57,7 @@
     <input type="button" value="Crear Productos" class="menusA" id="irAcrearProducto" data-menu="crearProducto">
     <input type="button" value="Administrar Productos" class="menusA" id="irAgestionarProducto" data-menu="administrarProductos">
     <input type="button" value="Administrar Compras" class="menusA" id="irAlistaAprobacionCompras" data-menu="listaAprobacionCompras">
-    <input type="button" value="Informe de Ganancias" class="menusA" data-menu="ingreso">
+    <input type="button" value="Informe de Ganancias" class="menusA" id="irAInformeDeGanancias"   data-menu="listaInformeGanancias">
    </div>
 </div>
 
@@ -206,6 +206,7 @@
 
                 </tbody>
                </table>
+               <p id="pCompras"></p>
                <h3>Compras Aprobadas:</h3>
                <p id="monto"></p>
                <p id="saldoDisponible"></p>
@@ -215,6 +216,7 @@
  <section class="ventana" id="listaAprobacionCompras">
     <div class="centrado">
             <h2>Listas de Aprobacion</h2>
+            <a id="volverMenuAdmin2" data-menu="menuAdmin">Volver al Menu</a>
             <div class="titulos">
                 <h3>Lista Aprobadas</h3>
                 <h3>Lista Pendientes</h3>
@@ -271,9 +273,24 @@
     </div>
 </div>
    </section>
-       
-    
-    
+<!--INFORME DE GANANCIAS-->
+<section class="ventana" id="listaInformeGanancias">
+    <div class="centrado">
+    <h2>Informe de Ganancias</h2>
+   <table>
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Unidades Vendidas</th>
+            <th>Ganancia Total de Compras</th>
+        </tr>
+    </thead>
+    <tbody id="tablaInformeGanancias">
+    </tbody>
+   </table>
+   <a id="volverMenuAdmin3" data-menu="menuAdmin">Volver al Menu</a>
+</div>
+</section>      
         
  <script src="javascript/sistema.js"></script>
     <script src="javascript/main.js"></script>

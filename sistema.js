@@ -159,6 +159,9 @@ nuevaCompraCanceladaTest(cantidad,producto,cliente){
 nuevaCompraAprobadaTest(cantidad,producto,cliente){
     let nuevaCompra = new Compra(cantidad,producto,cliente);
     nuevaCompra.estado = "Aprobada";
+    nuevaCompra.producto.unidadesVendidas +=cantidad;
+    nuevaCompra.cliente.saldo = nuevaCompra.cliente.saldo - nuevaCompra.precioCompra;
+    nuevaCompra.cliente.saldoNegativo();
     this.compras.push(nuevaCompra);
     cliente.misCompras.push(nuevaCompra);
 }
@@ -178,15 +181,23 @@ let miCompra = this.buscarObjetoPor1Parametro(this.compras, "id" ,idCompra);
 miCompra.estado = "Aprobada";
 miCompra.producto.stock = miCompra.producto.stock - miCompra.cantidad;
 miCompra.cliente.saldo = miCompra.cliente.saldo - miCompra.precioCompra;
-
-if (miCompra.cliente.saldo <= 0) {
-    miCompra.cliente.saldo = 0;
+miCompra.producto.unidadesVendidas += miCompra.cantidad;
+miCompra.cliente.saldoNegativo(); 
+miCompra.producto.evaluarStock();
 }
 
-if(miCompra.producto.stock <= 0){
-    miCompra.producto.estado = "pausado";
+
+gananciaTotal(){
+let gananciaTotal = 0;
+for(i=0;i<this.compras.length;i++){
+ let unaCompra = this.compras[i];
+ if(unaCompra.estado == "Aprobada"){
+   gananciaTotal += unaCompra.precioCompra;
+ }
 }
+   return gananciaTotal; 
 }
+
 
 }
 
@@ -214,6 +225,13 @@ class Cliente{
     this.id = ++idCliente;
     this.misCompras = [];
   }
+
+   saldoNegativo(){
+    if(this.saldo <=0){
+        this.saldo =0;
+    }
+   }
+
 }
 
 let idProducto = 0;
@@ -227,13 +245,14 @@ class Producto{
         this.estado = "activo";
         this.oferta = false;
         this.id = `PROD_ID_${++idProducto}`;
-    
+        this.unidadesVendidas = 0;
     }
     evaluarStock(){
-        if(this.stock == 0){
+        if(this.stock <= 0){
             this.estado = "pausado";
         }
     }
+   
 }
 let idCompra =0;
 class Compra{
@@ -248,4 +267,7 @@ class Compra{
     calcularCosto(){
         this.precioCompra = this.producto.precio * this.cantidad;
     }
+
+    
+
 }

@@ -726,6 +726,14 @@ gap: 10px;
     cursor: pointer;
 }
 
+#listaMisCompras #pCompras{
+    margin: 10px 0 15px 0;
+    color: red;
+    font-weight: bolder;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-style: italic;
+    text-align: center;
+}
 /*-----------LISTA DE APROBACION-----------------------*/
 
 h1{
@@ -825,6 +833,7 @@ margin-top: 30px;
 #listaAprobacionCompras input[type=button]{
     padding: 5px;
     margin: 15px 0 15px 0;
+    cursor: pointer;
 }
 
 #listaAprobacionCompras #stock{
@@ -842,3 +851,80 @@ justify-content: space-between;
 flex-direction: column;
 }
 
+#listaAprobacionCompras #volverMenuAdmin2{
+    display: block;
+    width: 100px;
+    padding: 10px;
+    background-color: azure;
+    border: 1px solid black;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+/*-------------------INFORME DE GANANCIAS--------------------*/
+
+#listaInformeGanancias h2{
+    text-align: center;
+    margin-bottom: 10px;
+}
+    
+#listaInformeGanancias #encabezado img{
+    height: 100px;
+    width: 100px;
+}
+ 
+#listaInformeGanancias .centrado{
+    display: block;
+    width: 1500px;
+    margin: 100px auto;
+}
+#listaInformeGanancias table{
+    width: 100%;
+    height: 450px;
+    border-spacing: 0;
+    border-collapse: collapse; 
+    margin: 0 auto;
+}
+    
+#listaInformeGanancias th{
+    background-color: rgb(78, 77, 77);
+    font-size: 20px;
+    padding: 18px;
+    color: azure;
+}
+    
+#listaInformeGanancias .oscuro{
+    background-color: rgb(199, 198, 198);
+}
+    
+#listaInformeGanancias td{
+    text-align: center;
+    background-color: rgb(233, 231, 231);
+    font-size: 15px;
+    padding: 10px;
+    font-weight: bolder;
+}
+#listaInformeGanancias tr:hover{
+    border: 2px solid black;
+    padding: 15px;  
+}
+
+#listaInformeGanancias .total{
+font-weight: bolder;
+font-size: larger;
+}
+
+#listaInformeGanancias #volverMenuAdmin3{
+    display: block;
+    width: 100px;
+    padding: 10px;
+    background-color: azure;
+    border: 1px solid black;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    margin: 20px auto;
+
+}
