@@ -6,6 +6,9 @@
     <meta name="description" content="Obligatorio Programacion 1">
     <link rel="stylesheet" href="styles.css" type="text/css">
     <title>Obligatorio P1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 </head>
     <body>
         <header>
@@ -85,7 +88,18 @@
          </div>
          <div class="columna">
              <label for="img">URL de la Imagen</label>
-             <input type="text" name="img" id="img" placeholder="img/">
+             <select name="" id="img">
+                <option value="img/pelota.jpg">Pelota de futbol</option>
+                    <option value="img/botines.jpg">Botin de futbol</option>
+                        <option value="img/botella.jpg">Botella </option>
+                            <option value="img/guantes.jpg">Guantes de boxeo</option>
+                                <option value="img/short.jpg">Short deportivo</option>
+                                    <option value="img/rugby.jpg">Pelota de rugby</option>
+                                        <option value="img/campera.jpg">Campera deportiva</option>
+                                            <option value="img/bolso.jpeg">Bolso</option>
+                                                <option value="img/bicicleta.jpg">Bicicleta</option>
+                                                    <option value="img/gorra.jpg">Gorra</option>
+             </select>
              <label for="stock">Stock Disponible</label>
              <input type="text" name="asunto" id="stock" placeholder="">
              </div>
@@ -282,12 +296,16 @@
         <tr>
             <th>Producto</th>
             <th>Unidades Vendidas</th>
-            <th>Ganancia Total de Compras</th>
+            <!--<th>Ganancia Total de Compras</th>-->
         </tr>
     </thead>
     <tbody id="tablaInformeGanancias">
     </tbody>
    </table>
+   <div id="divganancias">
+   <p id="pInformes2">Ganancias totales:</p>
+   <p id="pInformes"></p>
+</div>
    <a id="volverMenuAdmin3" data-menu="menuAdmin">Volver al Menu</a>
 </div>
 </section>      

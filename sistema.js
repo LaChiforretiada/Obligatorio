@@ -8,21 +8,35 @@ class Sistema{
     }
 
 precargarDatos(){
+        /*--------ADMINISTRADORES----------------------*/
         this.nuevoUsuarioAdministrador("Lucas", "Sosamu");
         this.nuevoUsuarioAdministrador("agudelateja", "agustin1");
-        this.nuevoUsuarioAdministrador("roberto", "robertito");
+        this.nuevoUsuarioAdministrador("Matias", "Mati30");
+        this.nuevoUsuarioAdministrador("Santiago", "Santi30");
+        this.nuevoUsuarioAdministrador("Administrador3", "Administrador3");
+        /*--------------------CLIENTES-----------------*/
         this.nuevoCliente("Lucas", "Sosa", "big smoke", "Luk5as","4539-3715-6707-0872" ,"777");
-        this.nuevoProductoOferta("Pelota", 200, "Pelota de Futbol", "img/pelota.jpg", 20);
-        this.nuevoProductoOferta("Botella", 400, "Botella para agua", "img/botella.jpg", 10);
-        this.nuevoProducto("Bicicleta",700,"Bici", "img/bici.jpg", 4);
-        this.nuevoProducto("Bicicleta",700,"Bici", "img/bici.jpg", 4);
-        this.nuevoProductoInactivo("Botella", 400, "Botella para agua", "img/botella.jpg", 10);
-        this.nuevoProductoInactivo("Pelota", 200, "Pelota de Futbol", "img/pelota.jpg", 20);
-        this.nuevaCompraAprobadaTest(4,this.productos[0],this.clientes[0]);
-        this.nuevaCompraAprobadaTest(6,this.productos[1],this.clientes[0]);
-        this.nuevaCompraPendienteTest(5,this.productos[2],this.clientes[0]);
-        this.nuevaCompraPendienteTest(2,this.productos[3],this.clientes[0]);
-        this.nuevaCompraCanceladaTest(2,this.productos[0],this.clientes[0]);
+        this.nuevoCliente("Ignacio", "Lacordelle", "bahamut", "Bahamut32","4539-3715-6707-0872" ,"888");
+        this.nuevoCliente("Rodrigo", "Rodriguez", "rober", "Rodri1","4539-3715-6707-0872" ,"999");
+        this.nuevoCliente("Sebastian", "Mondo", "semon", "Semon45","4539-3715-6707-0872" ,"111");
+        this.nuevoCliente("Emilia", "Varela", "emiliachan", "Emilia1000","4539-3715-6707-0872" ,"222");
+        /*-----------------PRODUCTOS-------------------*/
+        this.nuevoProductoOferta("Pelota de futbol", 220, "Pelota de Futbol", "img/pelota.jpg", 20);
+        this.nuevoProductoOferta("Botella", 70, "Botella para agua", "img/botella.jpg", 10);
+        this.nuevoProductoOferta("Short", 200, "Short de Futbol", "img/short.jpg", 0);
+        this.nuevoProductoOferta("Botines", 400, "Botines de futbol", "img/botines.jpg", 10);
+        this.nuevoProducto("Bicicleta",500,"Bicicleta moderna", "img/bici.jpg", 4);
+        this.nuevoProducto("Guantes de boxeo",250,"Guantes para boxeo para adultos", "img/guantes.jpg", 4);
+        this.nuevoProducto("Campera",300,"Campera deportiva", "img/campera.jpg", 4);
+        this.nuevoProducto("Gorra",120,"Gorra zarpada", "img/gorra.jpg", 4);
+        this.nuevoProductoInactivo("Bolso", 360, "Bolso grande", "img/bolso.jpeg", 10);
+        this.nuevoProductoInactivo("Pelota de rugby", 145, "Pelota de rugby", "img/rugby.jpg", 20);
+        /*---------------COMPRAS-----------------------*/
+        this.nuevaCompraAprobadaTest(2,this.productos[0],this.clientes[0]);
+        this.nuevaCompraAprobadaTest(3,this.productos[1],this.clientes[1]);
+        this.nuevaCompraPendienteTest(2,this.productos[8],this.clientes[2]);
+        this.nuevaCompraPendienteTest(1,this.productos[5],this.clientes[3]);
+        this.nuevaCompraCanceladaTest(4,this.productos[7],this.clientes[4]);
         
     }
 
@@ -106,17 +120,20 @@ crearProducto(nombreProducto,precioProducto,descripcion,imagen,stock){
 nuevoProductoOferta(nombreProducto,precioProducto,descripcion,imagen,stock){
     let nuevoProd = new Producto(nombreProducto,precioProducto,descripcion,imagen,stock);
     nuevoProd.oferta = true;
+    nuevoProd.evaluarStock();
     this.productos.push(nuevoProd);
 }
 
 nuevoProducto(nombreProducto,precioProducto,descripcion,imagen,stock){
     let nuevoProd = new Producto(nombreProducto,precioProducto,descripcion,imagen,stock);
+    nuevoProd.evaluarStock();
     this.productos.push(nuevoProd);
 }
 
 nuevoProductoInactivo(nombreProducto,precioProducto,descripcion,imagen,stock){
     let nuevoProd = new Producto(nombreProducto,precioProducto,descripcion,imagen,stock);
     nuevoProd.estado = "pausado";
+    nuevoProd.evaluarStock();
     this.productos.push(nuevoProd);
 }
 
@@ -189,7 +206,7 @@ miCompra.producto.evaluarStock();
 
 gananciaTotal(){
 let gananciaTotal = 0;
-for(i=0;i<this.compras.length;i++){
+for(let i=0;i<this.compras.length;i++){
  let unaCompra = this.compras[i];
  if(unaCompra.estado == "Aprobada"){
    gananciaTotal += unaCompra.precioCompra;

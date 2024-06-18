@@ -3,11 +3,15 @@
     margin: 0;
   }
   /*--------------------------HEADER--------------*/
+
+  body{
+  background-color: rgb(228, 228, 226);
+}
 header{
       width: 100%;
       display: block;
       height: 120px;
-      background-color: darkseagreen;
+      background-color: rgb(0, 10, 0);
       gap: 70px;
       margin: 0 auto;
       text-align: center;
@@ -35,13 +39,14 @@ margin-top: 10px;
 
 .menusA{
     padding: 8px;
-    background-color: darkseagreen;
+    background-color: rgb(0, 10, 0);
     border: 1px solid white;
     border-radius: 5px;
     font-weight: bolder;
     cursor: pointer;
     border: 1px solid black;
     margin: 0 4px 0 4px;
+    color: white;
 }
 
 #menuCliente div{
@@ -74,7 +79,7 @@ margin: 0 auto;
    
 .logout{
 padding: 8px;
-background-color: darkseagreen;
+background-color: rgb(141, 141, 141);
 border-radius: 5px;
 font-weight: bolder;
 cursor: pointer;
@@ -83,12 +88,20 @@ border: 1px solid black;
 }
    
   h1{
-  color: black;
+  color: rgb(255, 255, 255);
   letter-spacing: 2px;
   margin: 0 auto;
   text-align: center;
-  padding-top: 40px;
-  }
+  padding-top: 30px;
+  font-family:  "Permanent Marker", cursive;
+font-weight: 200;
+letter-spacing: 5px;
+}
+
+
+
+
+
 
 .menusA:hover{
 padding: 10px;
@@ -192,6 +205,7 @@ box-shadow: 3px -2px 9px;
           padding: 9px;
           width: 100%;
           box-shadow: 10px;
+          cursor: pointer;
   }
           
           
@@ -302,6 +316,11 @@ box-shadow: 3px -2px 9px;
       align-items: center;
       cursor: pointer;
   }
+
+  #crearProducto select{
+   padding: 7px;
+   cursor: pointer;
+}
   
   /*---------------LISTA PRODUCTOS-----------------------*/
   
@@ -736,9 +755,7 @@ gap: 10px;
 }
 /*-----------LISTA DE APROBACION-----------------------*/
 
-h1{
-    color: black;
-}
+
 p{
 text-align: center;
 }
@@ -881,7 +898,7 @@ flex-direction: column;
     margin: 100px auto;
 }
 #listaInformeGanancias table{
-    width: 100%;
+    width: 50%;
     height: 450px;
     border-spacing: 0;
     border-collapse: collapse; 
@@ -927,4 +944,25 @@ font-size: larger;
     cursor: pointer;
     margin: 20px auto;
 
+}
+
+#divganancias{
+margin-top: 10px;
+padding-top: 5px;
+display: flex;
+flex-wrap: wrap;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+border-top: 1px solid;
+}
+
+#pInformes{
+display: contents;
+font-size: 30px ;
+}
+
+#pInformes2{
+display: contents;
+font-size: 25px;
 }
